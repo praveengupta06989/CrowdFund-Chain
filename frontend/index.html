@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CrowdFund Chain</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.2/dist/ethers.umd.min.js"></script>
+</head>
+<body>
+  <header class="top">
+    <div class="brand"><span class="logo">&#9672;</span> CrowdFund Chain</div>
+    <div class="right">
+      <span id="chain-badge" class="badge">not connected</span>
+      <button id="connect" class="btn primary">Connect wallet</button>
+    </div>
+  </header>
+
+  <div id="banner" class="banner hidden"></div>
+
+  <main>
+    <section class="hero">
+      <h1>Back ideas. Get refunded if they fall short.</h1>
+      <p>Every campaign is an all-or-nothing smart contract: the creator is paid only if the goal is reached by the deadline, otherwise every backer can claim their money back.</p>
+      <div class="stats">
+        <div><b id="stat-count">0</b><span>campaigns</span></div>
+        <div><b id="stat-raised">0</b><span>ETH pledged</span></div>
+        <div><b id="stat-backers">0</b><span>pledges</span></div>
+      </div>
+    </section>
+
+    <details class="panel" id="create-panel">
+      <summary>Start a campaign</summary>
+      <div class="form">
+        <label>Title <input id="f-title" maxlength="100" placeholder="e.g. Community Solar Library"></label>
+        <label>Description <textarea id="f-desc" rows="3" maxlength="1000" placeholder="What are you building and why?"></textarea></label>
+        <div class="row">
+          <label>Goal (ETH) <input id="f-goal" type="number" min="0" step="0.01" value="1"></label>
+          <label>Duration (days, 1-90) <input id="f-days" type="number" min="1" max="90" value="30"></label>
+        </div>
+        <button id="f-submit" class="btn primary">Create campaign</button>
+      </div>
+    </details>
+
+    <nav class="filters" id="filters">
+      <button data-f="all" class="active">All</button>
+      <button data-f="0">Active</button>
+      <button data-f="1">Successful</button>
+      <button data-f="2">Failed</button>
+      <button data-f="3">Cancelled</button>
+      <button data-f="mine">Mine</button>
+    </nav>
+
+    <section id="campaigns" class="grid"></section>
+  </main>
+
+  <div id="modal" class="modal hidden"><div class="modal-card">
+    <button class="close" id="modal-close" aria-label="Close">&times;</button>
+    <h3 id="modal-title"></h3>
+    <div id="modal-body"></div>
+  </div></div>
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>

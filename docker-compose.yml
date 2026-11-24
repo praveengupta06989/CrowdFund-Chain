@@ -1,0 +1,46 @@
+services:
+  node:
+    build: .
+    command: npx hardhat node --hostname 0.0.0.0
+    ports:
+      - "8545:8545"
+    healthcheck:
+      test: ["CMD", "node", "scripts/healthcheck.js"]
+      interval: 3s
+      timeout: 5s
+      retries: 30
+      start_period: 5s
+
+  deployer:
+    build: .
+    command: npx hardhat run scripts/deploy.js --network docker
+    environment:
+      DEPLOY_OUT_DIR: /shared
+      SEED: "true"
+      RPC_URL: http://node:8545
+      PUBLIC_RPC_URL: http://127.0.0.1:8545
+    volumes:
+      - shared:/shared
+    depends_on:
+      node:
+        condition: service_healthy
+    restart: "no"
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:80"
+    volumes:
+      - shared:/usr/share/nginx/html/deployed:ro
+    depends_on:
+      deployer:
+        condition: service_completed_successfully
+
+  # docker compose --profile test run --rm tests
+  tests:
+    build: .
+    command: npx hardhat test
+    profiles: ["test"]
+
+volumes:
+  shared:
